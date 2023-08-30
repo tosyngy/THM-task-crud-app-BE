@@ -1,0 +1,8 @@
+{
+    "env": {
+        "MONGO_USER": "TryHackMe",
+        "MONGO_PASSWORD": "Soz1mUDLEvDGqvwu",
+        "MONGO_DB": "THM_task_db",
+        "MONGO_DB_URI": "mongodb://localhost:27017/THM_task_db"
+    }
+}
