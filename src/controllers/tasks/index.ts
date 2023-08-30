@@ -53,3 +53,20 @@ const addTask = async (req: Request, res: Response): Promise<void> => {
     }
   }
 
+  const deleteTask = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const deletedTask: ITask | null = await Task.findByIdAndRemove(
+        req.params.id
+      )
+      const allTasks: ITask[] = await Task.find()
+      res.status(200).json({
+        message: "Task deleted",
+        task: deletedTask,
+        tasks: allTasks,
+      })
+    } catch (error) {
+      throw error
+    }
+  }
+  
+  export { getTasks, addTask, updateTask, deleteTask }
