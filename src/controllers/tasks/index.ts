@@ -26,8 +26,30 @@ const addTask = async (req: Request, res: Response): Promise<void> => {
   
       res
         .status(201)
-        .json({ message: "Task added", todo: newTask, tasks: allTasks })
+        .json({ message: "Task added", task: newTask, tasks: allTasks })
     } catch (error) {
       throw error
     }
   }
+
+  const updateTask = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const {
+        params: { id },
+        body,
+      } = req
+      const updateTask: ITask | null = await Task.findByIdAndUpdate(
+        { _id: id },
+        body
+      )
+      const allTasks: ITask[] = await Task.find()
+      res.status(200).json({
+        message: "Task updated",
+        task: updateTask,
+        tasks: allTasks,
+      })
+    } catch (error) {
+      throw error
+    }
+  }
+
