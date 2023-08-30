@@ -3,14 +3,16 @@ import {  getTask, getTasks, addTask, updateTask, deleteTask } from "../controll
 
 const router: Router = Router()
 
-router.get("/tasks", getTasks)
+const uri = "/api/v1"
 
-router.get("/task/:id", getTask)
+router.get(`${uri}/tasks`, getTasks)
 
-router.post("/add-task", addTask)
+router.get(`${uri}/task/:id`, getTask)
 
-router.put("/edit-task/:id", updateTask)
+router.post(`${uri}/add-task`, addTask)
 
-router.delete("/delete-task/:id", deleteTask)
+router.put(`${uri}/edit-task/:id`, updateTask)
+
+router.delete(`${uri}/delete-task/:id`, deleteTask)
 
 export default router
