@@ -1,3 +1,4 @@
+import 'express-async-errors';
 import { Router } from "express"
 import {  getTask, getTasks, addTask, updateTask, deleteTask } from "../controllers/tasks"
 
@@ -9,10 +10,10 @@ router.get(`${uri}/tasks`, getTasks)
 
 router.get(`${uri}/task/:id`, getTask)
 
-router.post(`${uri}/add-task`, addTask)
+router.post(`${uri}/task`, addTask)
 
-router.put(`${uri}/edit-task/:id`, updateTask)
+router.put(`${uri}/task/:id`, updateTask)
 
-router.delete(`${uri}/delete-task/:id`, deleteTask)
+router.delete(`${uri}/task/:id`, deleteTask)
 
 export default router

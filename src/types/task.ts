@@ -2,6 +2,6 @@ import { Document } from "mongoose"
 
 export interface ITask extends Document {
   name: string
-  description: string
-  status: boolean
+  description?: string
+  status?: boolean
 }

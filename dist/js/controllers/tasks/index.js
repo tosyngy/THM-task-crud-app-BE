@@ -14,13 +14,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTask = exports.updateTask = exports.addTask = exports.getTask = exports.getTasks = void 0;
 const task_1 = __importDefault(require("../../models/task"));
+const helper_1 = require("../helper");
 const getTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const tasks = yield task_1.default.find();
         res.status(200).json({ tasks });
     }
     catch (error) {
-        throw error;
+        res
+            .status(500)
+            .json({ message: "Error in Task of API: /task" });
     }
 });
 exports.getTasks = getTasks;
@@ -31,13 +34,18 @@ const getTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(200).json({ tasks });
     }
     catch (error) {
-        throw error;
+        res
+            .status(500)
+            .json({ message: "Error in Task of API: /task" });
     }
 });
 exports.getTask = getTask;
 const addTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
+        if ((0, helper_1.confirmError)(body, res)) {
+            return;
+        }
         const task = new task_1.default({
             name: body.name,
             description: body.description,
@@ -50,7 +58,9 @@ const addTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             .json({ message: "Task added", task: newTask, tasks: allTasks });
     }
     catch (error) {
-        throw error;
+        res
+            .status(500)
+            .json({ message: "Error in Task of API: /task" });
     }
 });
 exports.addTask = addTask;
