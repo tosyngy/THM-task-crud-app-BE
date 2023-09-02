@@ -1,19 +1,25 @@
 import 'express-async-errors';
 import { Router } from "express"
-import {  getTask, getTasks, addTask, updateTask, deleteTask } from "../controllers/tasks"
+import { getTask, getTasks, addTask, updateTask, deleteTask } from "../controllers/tasks"
+import { auth } from '../middleware/auth';
+import { login, register } from '../controllers/users';
 
 const router: Router = Router()
 
 const uri = "/api/v1"
 
-router.get(`${uri}/tasks`, getTasks)
+router.post(`${uri}/auth/login`, login)
+router.post(`${uri}/auth/register`, register)
 
-router.get(`${uri}/task/:id`, getTask)
+router.get(`${uri}/tasks`, auth, getTasks)
 
-router.post(`${uri}/task`, addTask)
+router.get(`${uri}/task/:id`, auth, getTask)
 
-router.put(`${uri}/task/:id`, updateTask)
+router.post(`${uri}/task`, auth, addTask)
 
-router.delete(`${uri}/task/:id`, deleteTask)
+router.put(`${uri}/task/:id`, auth, updateTask)
+
+router.delete(`${uri}/task/:id`, auth, deleteTask)
+
 
 export default router

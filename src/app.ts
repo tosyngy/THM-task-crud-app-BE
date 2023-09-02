@@ -2,15 +2,17 @@ import express, { Express } from "express"
 import mongoose from "mongoose"
 import cors from "cors"
 import taskRoutes from "./routes"
-import './process';
+import {invalidPathHandler } from "./helper";
 
 const app: Express = express()
 
 const PORT: string | number = process.env.PORT || 4000
 
+
 app.use(cors())
 app.use(express.json());
 app.use(taskRoutes)
+app.use(invalidPathHandler)
 
 const uri: string = `${process.env.MONGO_DB_URI}`
 
@@ -30,7 +32,6 @@ mongoose.connect(uri, options)
     })
 
 const db = mongoose.connection;
-    db.once('open', () => {
-      console.log('Connected to MongoDB');
-    });
-    
+db.once('open', () => {
+    console.log('Connected to MongoDB');
+});
