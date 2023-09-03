@@ -19,14 +19,10 @@ const taskSchema: Schema = new Schema(
     }, 
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User", // Refers to the "User" model
+      ref: "User",
     },
   },
   { timestamps: true }
 )
 
-
-
-// { "name":"tosin","description":"tosin"}
-// { "name":"task 1","description":"my task", "status":false}
 export default model<ITask>("Task", taskSchema)

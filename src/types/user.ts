@@ -1,9 +1,8 @@
-import { Document, Schema } from "mongoose"
+import { Document } from "mongoose"
 
 export interface IUser extends Document {
   username: string
   password: string
-  task?: string
 }
 
 
