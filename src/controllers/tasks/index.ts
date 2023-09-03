@@ -1,11 +1,12 @@
 import { Response, Request, NextFunction } from "express"
 import { ITask } from "./../../types/task"
 import Task from "../../models/task"
-import { confirmError } from "../../helper"
+import { confirmError, getId } from "../../helper"
 
 const getTasks = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const tasks: ITask[] = await Task.find()
+        const user = getId(req.headers.authorization)
+        const tasks: ITask[] = await Task.find({ user })
         res.status(200).json({ tasks })
     } catch (error) {
         res
@@ -21,8 +22,9 @@ const getTask = async (req: Request, res: Response, next: NextFunction): Promise
             params: { id },
             body,
         } = req
-        const tasks: ITask | null = await Task.findById(id)
-        res.status(200).json({ tasks })
+        const user = getId(req.headers.authorization)
+        const task: ITask | null = await Task.findOne({ id, user })
+        res.status(200).json({ task })
     } catch (error) {
         res
             .status(500)
@@ -34,6 +36,7 @@ const getTask = async (req: Request, res: Response, next: NextFunction): Promise
 const addTask = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const body = req.body as Pick<ITask, "name" | "description" | "status">
+        const user = getId(req.headers.authorization)
         if (confirmError(body, res)) {
             return
         }
@@ -41,10 +44,11 @@ const addTask = async (req: Request, res: Response, next: NextFunction): Promise
             name: body.name,
             description: body.description,
             status: body.status,
+            user: user
         })
 
         const newTask: ITask = await task.save()
-        const allTasks: ITask[] = await Task.find()
+        const allTasks: ITask[] = await Task.find({ user })
 
         res
             .status(201)
@@ -65,16 +69,21 @@ const updateTask = async (req: Request, res: Response, next: NextFunction): Prom
             body,
         } = req
 
-        const updateTask: ITask | null = await Task.findByIdAndUpdate(
-            { _id: id },
-            body
-        )
-        const allTasks: ITask[] = await Task.find()
-        res.status(200).json({
-            message: "Task updated",
-            task: updateTask,
-            tasks: allTasks,
-        })
+        const user = getId(req.headers.authorization)
+        const task: ITask | null = await Task.findOne({ id, user })
+        if (task) {
+            const updateTask: ITask | null = await Task.findByIdAndUpdate(
+                { _id: id },
+                body
+            )
+            const allTasks: ITask[] = await Task.find({ user })
+            res.status(200).json({
+                message: "Task updated",
+                task: updateTask,
+                tasks: allTasks,
+            })
+        }
+
     } catch (error) {
         res
             .status(500)
@@ -85,15 +94,21 @@ const updateTask = async (req: Request, res: Response, next: NextFunction): Prom
 
 const deleteTask = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const deletedTask: ITask | null = await Task.findByIdAndRemove(
-            req.params.id
-        )
-        const allTasks: ITask[] = await Task.find()
-        res.status(200).json({
-            message: "Task deleted",
-            task: deletedTask,
-            tasks: allTasks,
-        })
+        const id = req.params.id
+        const user = getId(req.headers.authorization)
+        const task: ITask | null = await Task.findOne({ id, user })
+        if (task) {
+            const deletedTask: ITask | null = await Task.findByIdAndRemove(
+                id
+            )
+            const allTasks: ITask[] = await Task.find({ user })
+            res.status(200).json({
+                message: "Task deleted",
+                task: deletedTask,
+                tasks: allTasks,
+            })
+        }
+
     } catch (error) {
         res
             .status(500)
@@ -101,5 +116,6 @@ const deleteTask = async (req: Request, res: Response, next: NextFunction): Prom
         next(error)
     }
 }
+
 
 export { getTasks, getTask, addTask, updateTask, deleteTask }

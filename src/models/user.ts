@@ -6,7 +6,7 @@ const saltRounds = 8
 
 const userSchema: Schema<IUser> = new Schema({
     username: { type: String, unique: true },
-    password: { type: String },
+    password: { type: String }
 });
 
 userSchema.pre('save', async function (next: any) {
