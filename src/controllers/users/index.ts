@@ -8,6 +8,12 @@ import jwt from 'jsonwebtoken'
 export const login = async (req: Request, res: Response) => {
   try {
     const user = req.body as Pick<IUser, "username" | "password">
+<<<<<<< HEAD
+=======
+    if (confirmUserError(user, res)) {
+      return
+    }
+>>>>>>> c6ee73a4b187e1598406ec1d362c7bc8f2eb7fd6
     const foundUser = await userServices.findOne({ username: user.username });
     if (!foundUser) {
       return res.status(400).send({message:'Username is not correct', status: 401});
@@ -39,7 +45,11 @@ export const register = async (req: Request, res: Response) => {
     }
   try {
     await userServices.create(req.body);
+<<<<<<< HEAD
     res.status(200).send({message:'Registration successful', user});
+=======
+    res.status(200).send({message:'Inserted successfully', user});
+>>>>>>> c6ee73a4b187e1598406ec1d362c7bc8f2eb7fd6
   } catch (error: any) {
     return res.status(500).send({message:getErrorMessage(error.message), status: 500});
   }

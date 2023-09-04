@@ -3,6 +3,7 @@ import { Response } from "express"
 import { IUser } from "./types/user"
 
 export const confirmError = (body: Pick<ITask, "name" | "description">, res: Response): Boolean => {
+<<<<<<< HEAD
     if (validate(body.name)) {
         console.log("input error: name")
         res
@@ -15,6 +16,20 @@ export const confirmError = (body: Pick<ITask, "name" | "description">, res: Res
         res
             .status(400)
             .json({ message: "Mandatory field: description be alphanumeric up to 3 character!!!" })
+=======
+    if (body.name == null) {
+        console.log("input error: name")
+        res
+            .status(400)
+            .json({ message: "Mandatory field: name is missing. " })
+        return true
+    }
+    if (body.description == null) {
+        console.log("input error: description")
+        res
+            .status(400)
+            .json({ message: "Mandatory field: description is missing. " })
+>>>>>>> c6ee73a4b187e1598406ec1d362c7bc8f2eb7fd6
         return true
 
     }
@@ -22,6 +37,7 @@ export const confirmError = (body: Pick<ITask, "name" | "description">, res: Res
 }
 
 export const confirmUserError = (body: Pick<IUser, "username" | "password">, res: Response): Boolean => {
+<<<<<<< HEAD
     if (validate(body.username)) {
         console.log("input error: username")
         res
@@ -34,6 +50,20 @@ export const confirmUserError = (body: Pick<IUser, "username" | "password">, res
         res
             .status(400)
             .json({ message: "Mandatory field: password must be up to 3 character!!!" })
+=======
+    if (body.username == null) {
+        console.log("input error: username")
+        res
+            .status(400)
+            .json({ message: "Mandatory field: username is missing. " })
+        return true
+    }
+    if (body.password == null) {
+        console.log("input error: description")
+        res
+            .status(400)
+            .json({ message: "Mandatory field: password is missing. " })
+>>>>>>> c6ee73a4b187e1598406ec1d362c7bc8f2eb7fd6
         return true
 
     }
@@ -56,10 +86,15 @@ export const getId = (authorization: string = ".") => {
     const claims: any = atob(auth_0.split('.')[1])
     const claims_obj = JSON.parse(claims)
     const { _id } = claims_obj;
+<<<<<<< HEAD
 
     return _id
 }
 
 export const validate = (value: string): Boolean => {
     return !/^[a-zA-Z0-9 @._#$-]{3,}$/.test(value)
+=======
+   
+    return _id
+>>>>>>> c6ee73a4b187e1598406ec1d362c7bc8f2eb7fd6
 }
