@@ -1,6 +1,5 @@
 import { ITask } from "./../types/task"
 import { model, Schema } from "mongoose"
-
 const taskSchema: Schema = new Schema(
   {
     name: {
@@ -15,7 +14,12 @@ const taskSchema: Schema = new Schema(
 
     status: {
       type: Boolean,
-      required: true,
+      required: false,
+      default: false
+    }, 
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   { timestamps: true }

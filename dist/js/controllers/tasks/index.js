@@ -14,35 +14,40 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTask = exports.updateTask = exports.addTask = exports.getTask = exports.getTasks = void 0;
 const task_1 = __importDefault(require("../../models/task"));
-const helper_1 = require("../helper");
-const getTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const helper_1 = require("../../helper");
+const getTasks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const tasks = yield task_1.default.find();
+        const user = (0, helper_1.getId)(req.headers.authorization);
+        const tasks = yield task_1.default.find({ user });
         res.status(200).json({ tasks });
     }
     catch (error) {
         res
             .status(500)
             .json({ message: "Error in Task of API: /task" });
+        next(error);
     }
 });
 exports.getTasks = getTasks;
-const getTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { params: { id }, body, } = req;
-        const tasks = yield task_1.default.findById(id);
-        res.status(200).json({ tasks });
+        const user = (0, helper_1.getId)(req.headers.authorization);
+        const task = yield task_1.default.findOne({ id, user });
+        res.status(200).json({ task });
     }
     catch (error) {
         res
             .status(500)
             .json({ message: "Error in Task of API: /task" });
+        next(error);
     }
 });
 exports.getTask = getTask;
-const addTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const addTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
+        const user = (0, helper_1.getId)(req.headers.authorization);
         if ((0, helper_1.confirmError)(body, res)) {
             return;
         }
@@ -50,9 +55,10 @@ const addTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             name: body.name,
             description: body.description,
             status: body.status,
+            user: user
         });
         const newTask = yield task.save();
-        const allTasks = yield task_1.default.find();
+        const allTasks = yield task_1.default.find({ user });
         res
             .status(201)
             .json({ message: "Task added", task: newTask, tasks: allTasks });
@@ -61,37 +67,53 @@ const addTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res
             .status(500)
             .json({ message: "Error in Task of API: /task" });
+        next(error);
     }
 });
 exports.addTask = addTask;
-const updateTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updateTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { params: { id }, body, } = req;
-        const updateTask = yield task_1.default.findByIdAndUpdate({ _id: id }, body);
-        const allTasks = yield task_1.default.find();
-        res.status(200).json({
-            message: "Task updated",
-            task: updateTask,
-            tasks: allTasks,
-        });
+        const user = (0, helper_1.getId)(req.headers.authorization);
+        const task = yield task_1.default.findOne({ id, user });
+        if (task) {
+            const updateTask = yield task_1.default.findByIdAndUpdate({ _id: id }, body);
+            const allTasks = yield task_1.default.find({ user });
+            res.status(200).json({
+                message: "Task updated",
+                task: updateTask,
+                tasks: allTasks,
+            });
+        }
     }
     catch (error) {
-        throw error;
+        res
+            .status(500)
+            .json({ message: "Error in Task of API: /task" });
+        next(error);
     }
 });
 exports.updateTask = updateTask;
-const deleteTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const deletedTask = yield task_1.default.findByIdAndRemove(req.params.id);
-        const allTasks = yield task_1.default.find();
-        res.status(200).json({
-            message: "Task deleted",
-            task: deletedTask,
-            tasks: allTasks,
-        });
+        const id = req.params.id;
+        const user = (0, helper_1.getId)(req.headers.authorization);
+        const task = yield task_1.default.findOne({ id, user });
+        if (task) {
+            const deletedTask = yield task_1.default.findByIdAndRemove(id);
+            const allTasks = yield task_1.default.find({ user });
+            res.status(200).json({
+                message: "Task deleted",
+                task: deletedTask,
+                tasks: allTasks,
+            });
+        }
     }
     catch (error) {
-        throw error;
+        res
+            .status(500)
+            .json({ message: "Error in Task of API: /task" });
+        next(error);
     }
 });
 exports.deleteTask = deleteTask;
