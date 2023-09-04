@@ -61,5 +61,5 @@ export const getId = (authorization: string = ".") => {
 }
 
 export const validate = (value: string): Boolean => {
-    return !/^[a-zA-Z0-9 ]{3,}$/.test(value)
+    return !/^[a-zA-Z0-9 @._#$-]{3,}$/.test(value)
 }

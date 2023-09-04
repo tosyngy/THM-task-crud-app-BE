@@ -39,7 +39,7 @@ export const register = async (req: Request, res: Response) => {
     }
   try {
     await userServices.create(req.body);
-    res.status(200).send({message:'Inserted successfully', user});
+    res.status(200).send({message:'Registration successful', user});
   } catch (error: any) {
     return res.status(500).send({message:getErrorMessage(error.message), status: 500});
   }
