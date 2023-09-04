@@ -9,6 +9,7 @@ const router: Router = Router()
 const uri = "/api/v1"
 
 router.post(`${uri}/auth/login`, login)
+
 router.post(`${uri}/auth/register`, register)
 
 router.get(`${uri}/tasks`, auth, getTasks)
