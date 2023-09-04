@@ -65,15 +65,14 @@ const updateTask = async (req: Request, res: Response, next: NextFunction): Prom
 
     try {
         const {
-            params: { id },
+            params: { id: _id },
             body,
         } = req
-
         const user = getId(req.headers.authorization)
-        const task: ITask | null = await Task.findOne({ id, user })
+        const task: ITask | null = await Task.findOne({ _id, user })
         if (task) {
             const updateTask: ITask | null = await Task.findByIdAndUpdate(
-                { _id: id },
+                { _id },
                 body
             )
             const allTasks: ITask[] = await Task.find({ user })
@@ -94,12 +93,12 @@ const updateTask = async (req: Request, res: Response, next: NextFunction): Prom
 
 const deleteTask = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const id = req.params.id
+        const _id = req.params.id
         const user = getId(req.headers.authorization)
-        const task: ITask | null = await Task.findOne({ id, user })
+        const task: ITask | null = await Task.findOne({ _id, user })
         if (task) {
             const deletedTask: ITask | null = await Task.findByIdAndRemove(
-                id
+                _id
             )
             const allTasks: ITask[] = await Task.find({ user })
             res.status(200).json({

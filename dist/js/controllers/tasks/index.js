@@ -73,11 +73,11 @@ const addTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 exports.addTask = addTask;
 const updateTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { params: { id }, body, } = req;
+        const { params: { id: _id }, body, } = req;
         const user = (0, helper_1.getId)(req.headers.authorization);
-        const task = yield task_1.default.findOne({ id, user });
+        const task = yield task_1.default.findOne({ _id, user });
         if (task) {
-            const updateTask = yield task_1.default.findByIdAndUpdate({ _id: id }, body);
+            const updateTask = yield task_1.default.findByIdAndUpdate({ _id }, body);
             const allTasks = yield task_1.default.find({ user });
             res.status(200).json({
                 message: "Task updated",
@@ -96,11 +96,11 @@ const updateTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 exports.updateTask = updateTask;
 const deleteTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = req.params.id;
+        const _id = req.params.id;
         const user = (0, helper_1.getId)(req.headers.authorization);
-        const task = yield task_1.default.findOne({ id, user });
+        const task = yield task_1.default.findOne({ _id, user });
         if (task) {
-            const deletedTask = yield task_1.default.findByIdAndRemove(id);
+            const deletedTask = yield task_1.default.findByIdAndRemove(_id);
             const allTasks = yield task_1.default.find({ user });
             res.status(200).json({
                 message: "Task deleted",

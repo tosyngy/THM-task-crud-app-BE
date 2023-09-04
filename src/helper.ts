@@ -3,18 +3,18 @@ import { Response } from "express"
 import { IUser } from "./types/user"
 
 export const confirmError = (body: Pick<ITask, "name" | "description">, res: Response): Boolean => {
-    if (body.name == null) {
+    if (validate(body.name)) {
         console.log("input error: name")
         res
             .status(400)
-            .json({ message: "Mandatory field: name is missing. " })
+            .json({ message: "Mandatory field: name be alphanumeric up to 3 character!!!" })
         return true
     }
-    if (body.description == null) {
+    if (validate(body.description)) {
         console.log("input error: description")
         res
             .status(400)
-            .json({ message: "Mandatory field: description is missing. " })
+            .json({ message: "Mandatory field: description be alphanumeric up to 3 character!!!" })
         return true
 
     }
@@ -22,18 +22,18 @@ export const confirmError = (body: Pick<ITask, "name" | "description">, res: Res
 }
 
 export const confirmUserError = (body: Pick<IUser, "username" | "password">, res: Response): Boolean => {
-    if (body.username == null) {
+    if (validate(body.username)) {
         console.log("input error: username")
         res
             .status(400)
-            .json({ message: "Mandatory field: username is missing. " })
+            .json({ message: "Mandatory field: username must be alphanumeric up to 3 character!!!" })
         return true
     }
-    if (body.password == null) {
-        console.log("input error: description")
+    if (body.password?.length < 3) {
+        console.log("input error: password")
         res
             .status(400)
-            .json({ message: "Mandatory field: password is missing. " })
+            .json({ message: "Mandatory field: password must be up to 3 character!!!" })
         return true
 
     }
@@ -56,6 +56,10 @@ export const getId = (authorization: string = ".") => {
     const claims: any = atob(auth_0.split('.')[1])
     const claims_obj = JSON.parse(claims)
     const { _id } = claims_obj;
-   
+
     return _id
+}
+
+export const validate = (value: string): Boolean => {
+    return !/^[a-zA-Z0-9 ]{3,}$/.test(value)
 }

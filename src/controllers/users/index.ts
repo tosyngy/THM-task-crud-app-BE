@@ -8,9 +8,6 @@ import jwt from 'jsonwebtoken'
 export const login = async (req: Request, res: Response) => {
   try {
     const user = req.body as Pick<IUser, "username" | "password">
-    if (confirmUserError(user, res)) {
-      return
-    }
     const foundUser = await userServices.findOne({ username: user.username });
     if (!foundUser) {
       return res.status(400).send({message:'Username is not correct', status: 401});
