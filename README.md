@@ -26,7 +26,6 @@ Open [http://localhost:4000](http://localhost:4000) to view it in the browser.
     - [Create a Task](#create-a-task)
     - [Update a Task](#update-a-task)
     - [Delete a Task](#delete-a-task)
-4. [Error Handling](#error-handling)
 
 ## Introduction
 
