@@ -83,24 +83,6 @@ const updateTask = async (req: Request, res: Response, next: NextFunction): Prom
             })
         }
 
-<<<<<<< HEAD
-=======
-        const user = getId(req.headers.authorization)
-        const task: ITask | null = await Task.findOne({ id, user })
-        if (task) {
-            const updateTask: ITask | null = await Task.findByIdAndUpdate(
-                { _id: id },
-                body
-            )
-            const allTasks: ITask[] = await Task.find({ user })
-            res.status(200).json({
-                message: "Task updated",
-                task: updateTask,
-                tasks: allTasks,
-            })
-        }
-
->>>>>>> c6ee73a4b187e1598406ec1d362c7bc8f2eb7fd6
     } catch (error) {
         res
             .status(500)
@@ -111,21 +93,12 @@ const updateTask = async (req: Request, res: Response, next: NextFunction): Prom
 
 const deleteTask = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-<<<<<<< HEAD
         const _id = req.params.id
         const user = getId(req.headers.authorization)
         const task: ITask | null = await Task.findOne({ _id, user })
         if (task) {
             const deletedTask: ITask | null = await Task.findByIdAndRemove(
                 _id
-=======
-        const id = req.params.id
-        const user = getId(req.headers.authorization)
-        const task: ITask | null = await Task.findOne({ id, user })
-        if (task) {
-            const deletedTask: ITask | null = await Task.findByIdAndRemove(
-                id
->>>>>>> c6ee73a4b187e1598406ec1d362c7bc8f2eb7fd6
             )
             const allTasks: ITask[] = await Task.find({ user })
             res.status(200).json({

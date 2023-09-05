@@ -8,21 +8,18 @@ import jwt from 'jsonwebtoken'
 export const login = async (req: Request, res: Response) => {
   try {
     const user = req.body as Pick<IUser, "username" | "password">
-<<<<<<< HEAD
-=======
     if (confirmUserError(user, res)) {
       return
     }
->>>>>>> c6ee73a4b187e1598406ec1d362c7bc8f2eb7fd6
     const foundUser = await userServices.findOne({ username: user.username });
     if (!foundUser) {
-      return res.status(400).send({message:'Username is not correct', status: 401});
+      return res.status(400).send({message:'Username or Password is not correct', status: 401});
     }
 
     const isMatch = bcrypt.compareSync(user.password, foundUser.password);
 
     if (!isMatch) {
-      return res.status(401).send({message:'Password is not correct', status: 401});
+      return res.status(401).send({message:'Username or Password is not correct', status: 401});
     }
     const token = jwt.sign({ _id: foundUser._id?.toString(), name: foundUser.username }, process.env.SECRET_KEY || '', {
       expiresIn: '1 days',
@@ -45,11 +42,7 @@ export const register = async (req: Request, res: Response) => {
     }
   try {
     await userServices.create(req.body);
-<<<<<<< HEAD
     res.status(200).send({message:'Registration successful', user});
-=======
-    res.status(200).send({message:'Inserted successfully', user});
->>>>>>> c6ee73a4b187e1598406ec1d362c7bc8f2eb7fd6
   } catch (error: any) {
     return res.status(500).send({message:getErrorMessage(error.message), status: 500});
   }
